@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Language Selection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0e14;
+    --bg-glow: #10141c;
+    --surface: #12161f;
+    --surface-hover: #171c27;
+    --border: #232935;
+    --border-hover: #3a4152;
+    --text: #f2efe9;
+    --text-muted: #8a93a3;
+    --accent: #d8a64b;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  body{
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background:
+      radial-gradient(circle at 18% -10%, var(--bg-glow) 0%, transparent 45%),
+      radial-gradient(circle at 85% 110%, #141a26 0%, transparent 50%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(28px, 6vw, 64px) clamp(16px, 6vw, 64px) clamp(20px, 3vw, 40px);
+  }
+
+  main{
+    width: 100%;
+    max-width: 980px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    animation: rise 0.9s cubic-bezier(.2,.8,.25,1) both;
+  }
+
+  @keyframes rise{
+    from{ opacity: 0; transform: translateY(14px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  .mark{
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border-hover);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 44px;
+    color: var(--accent);
+    font-family: 'Fraunces', serif;
+    font-size: 21px;
+  }
+
+  .grid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .lang{
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    min-height: 118px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(.2,.8,.25,1), border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .lang--wide{
+    grid-column: span 3;
+    max-width: 280px;
+    justify-self: center;
+  }
+
+  .lang:hover, .lang:focus-visible{
+    transform: translateY(-4px);
+    border-color: var(--border-hover);
+    background: var(--surface-hover);
+    box-shadow: 0 14px 28px -18px rgba(0,0,0,0.65);
+  }
+
+  .lang:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* large flag photo filling the card behind the label */
+  .flag-bg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.32;
+    transform: scale(1.08);
+    filter: saturate(0.9);
+    transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+    z-index: 0;
+  }
+
+  .lang:hover .flag-bg{
+    opacity: 0.5;
+    transform: scale(1.14);
+    filter: saturate(1.05);
+  }
+
+  /* subtle scrim so text stays legible over the flag photo */
+  .lang::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11,14,20,0.15) 0%, rgba(11,14,20,0.72) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Kurdish card intentionally has no flag and no pattern behind it */
+
+  .content{
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 18px 14px;
+  }
+
+  .glyph{
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    transition: color 0.25s ease, transform 0.25s ease;
+  }
+
+  .lang:hover .glyph{
+    color: var(--accent);
+    transform: scale(1.08);
+  }
+
+  .glyph svg{ width: 100%; height: 100%; }
+
+  .name{
+    font-size: 0.98rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-align: center;
+  }
+
+  .native-tag{
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+
+  footer{
+    margin-top: 56px;
+    padding-top: 22px;
+    width: 100%;
+    max-width: 980px;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--border);
+  }
+
+  footer p{
+    margin: 22px 0 0;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.01em;
+    text-align: center;
+  }
+
+  /* Large desktops: cap growth so the grid doesn't stretch thin */
+  @media (min-width: 1400px){
+    main{ max-width: 1080px; }
+    footer{ max-width: 1080px; }
+  }
+
+  /* Tablets */
+  @media (max-width: 720px){
+    .grid{ grid-template-columns: repeat(2, 1fr); }
+    .lang--wide{ grid-column: span 2; max-width: none; }
+  }
+
+  /* Phones */
+  @media (max-width: 480px){
+    .grid{ gap: 12px; }
+    .lang{ min-height: 104px; }
+    .flag-bg{ font-size: 5rem; }
+  }
+
+  /* Small phones: single column, still centered card style (not a side list) */
+  @media (max-width: 420px){
+    .grid{ grid-template-columns: 1fr 1fr; }
+    .lang--wide{ grid-column: span 2; max-width: none; }
+  }
+
+  @media (max-width: 340px){
+    .mark{ width: 40px; height: 40px; font-size: 18px; margin-bottom: 32px; }
+    .lang{ min-height: 96px; }
+  }
+
+  @media (hover: none){
+    .lang:hover{ transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <div class="mark" aria-hidden="true">世</div>
+
+  <div class="grid" role="navigation" aria-label="Language selection">
+
+    <a class="lang" href="tr.html" lang="tr">
+      <img class="flag-bg" src="https://flagcdn.com/w320/tr.png" alt="" aria-hidden="true">
+      <span class="content">
+        <span class="name">Türkçe</span>
+        <span class="native-tag">Turkish</span>
+      </span>
+    </a>
+
+    <a class="lang" href="en.html" lang="en">
+      <img class="flag-bg" src="https://flagcdn.com/w320/gb.png" alt="" aria-hidden="true">
+      <span class="content">
+        <span class="name">English</span>
+        <span class="native-tag">İngilizce</span>
+      </span>
+    </a>
+
+    <a class="lang" href="nl.html" lang="nl">
+      <img class="flag-bg" src="https://flagcdn.com/w320/nl.png" alt="" aria-hidden="true">
+      <span class="content">
+        <span class="name">Nederlands</span>
+        <span class="native-tag">Dutch</span>
+      </span>
+    </a>
+
+    <a class="lang" href="ar.html" lang="ar" dir="rtl">
+      <img class="flag-bg" src="https://flagcdn.com/w320/sa.png" alt="" aria-hidden="true">
+      <span class="content">
+        <span class="name">العربية</span>
+        <span class="native-tag">Arabic</span>
+      </span>
+    </a>
+
+    <a class="lang" href="ti.html" lang="ti">
+      <img class="flag-bg" src="https://flagcdn.com/w320/er.png" alt="" aria-hidden="true">
+      <span class="content">
+        <span class="name">ትግርኛ</span>
+        <span class="native-tag">Tigrinya</span>
+      </span>
+    </a>
+
+    <a class="lang" href="uk.html" lang="uk">
+      <img class="flag-bg" src="https://flagcdn.com/w320/ua.png" alt="" aria-hidden="true">
+      <span class="content">
+        <span class="name">українська</span>
+        <span class="native-tag">Ukrainian</span>
+      </span>
+    </a>
+
+    <a class="lang lang--wide" href="ku.html" lang="ku">
+      <span class="content">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 18L8 9L12 15L16 7L21 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="name">Kurdî</span>
+        <span class="native-tag">Kurdish</span>
+      </span>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  <p>This website made by Esatzilla</p>
+</footer>
+
+</body>
+</html>
